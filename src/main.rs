@@ -1,7 +1,3 @@
-//use arrow_array::{Array, Float64Array, Int64Array, RecordBatch, RecordBatchReader, StringArray};
-//use arrow_schema::{DataType, Field, Schema};
-//use arrow_select::concat::concat_batches;
-
 use adbc_core::driver_manager::ManagedDriver;
 use adbc_core::options::{AdbcVersion, OptionDatabase, OptionStatement};
 use adbc_core::Statement;
