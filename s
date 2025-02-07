@@ -7,7 +7,7 @@ function _extract() {
 
 function dummy() {
         export LD_LIBRARY_PATH=lib
-        cargo run
+        cargo run -- --example $FUNCNAME
 }
 
 function snowflake() {
@@ -18,7 +18,7 @@ function snowflake() {
         export ADBC_SNOWFLAKE_SQL_WAREHOUSE=$(_extract "warehousename")
         export ADBC_SNOWFLAKE_SQL_ROLE=$(_extract "rolename")
 
-        RUST_BACKTRACE=1 cargo run
+        cargo run -- --example $FUNCNAME
 }
 
 "$@"
