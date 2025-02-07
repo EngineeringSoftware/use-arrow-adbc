@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+adbc-core = { git = "https://github.com/apache/arrow-adbc.git", branch = "main", package = "adbc_core", version = "0.17.0", features = ["driver_manager"] }
+adbc-dummy = { git = "https://github.com/apache/arrow-adbc.git", branch = "main", package = "adbc_dummy", version = "0.17.0" }
