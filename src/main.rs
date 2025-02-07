@@ -1,53 +1,30 @@
-use adbc_core::driver_manager::ManagedDriver;
-use adbc_core::options::{AdbcVersion, OptionDatabase, OptionStatement};
-use adbc_core::Statement;
-use adbc_core::{Connection, Database, Driver, Optionable};
+use adbc_core::{Connection, Statement};
+use adbc_snowflake::{connection, database, Driver};
+use arrow_array::{cast::AsArray, types::Decimal128Type};
 
-const OPTION_STRING_LONG: &str = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-const OPTION_BYTES_LONG: &[u8] = b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Load the driver
+    let mut driver = Driver::try_load()?;
 
-fn main() {
-    let mut driver = ManagedDriver::load_dynamic_from_name(
-        "adbc_dummy",
-        Some(b"DummyDriverInit"),
-        AdbcVersion::V110,
-    )
-    .unwrap();
+    // Construct a database using environment variables
+    let mut database = database::Builder::from_env()?.build(&mut driver)?;
 
-    let mut database = driver.new_database().unwrap();
-    let mut connection = database.new_connection().unwrap();
-    let mut statement = connection.new_statement().unwrap();
+    // Create a connection to the database
+    let mut connection = connection::Builder::from_env()?.build(&mut database)?;
 
-    statement
-        .set_option(OptionStatement::Incremental, "true".into())
-        .unwrap();
-    let value = statement
-        .get_option_string(OptionStatement::Incremental)
-        .unwrap();
-    assert_eq!(value, "true");
+    // Construct a statement to execute a query
+    let mut statement = connection.new_statement()?;
 
-    // Pre-init options.
-    let options = [
-        (OptionDatabase::Username, "Alice".into()),
-        (OptionDatabase::Password, 42.into()),
-        (OptionDatabase::Uri, std::f64::consts::PI.into()),
-        (OptionDatabase::Other("pre.bytes".into()), b"Hello".into()),
-        (
-            OptionDatabase::Other("pre.string.long".into()),
-            OPTION_STRING_LONG.into(),
-        ),
-        (
-            OptionDatabase::Other("pre.bytes.long".into()),
-            OPTION_BYTES_LONG.into(),
-        ),
-    ];
+    // Execute a query
+    statement.set_sql_query("SELECT 21 + 21")?;
+    let mut reader = statement.execute()?;
 
-    let database = driver.new_database_with_opts(options).unwrap();
+    // Check the result
+    let batch = reader.next().expect("a record batch")?;
+    assert_eq!(
+        batch.column(0).as_primitive::<Decimal128Type>().value(0),
+        42
+    );
 
-    let value = database
-        .get_option_string(OptionDatabase::Username)
-        .unwrap();
-    assert_eq!(value, "Alice");
-
-    let _ = statement.execute().unwrap();
+    Ok(())
 }
