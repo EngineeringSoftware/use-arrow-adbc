@@ -1,6 +1,6 @@
 mod dummy;
-mod snowflake;
 mod snowflake_dynamic;
+mod snowflake_static;
 
 use clap::{Parser, ValueEnum};
 
@@ -12,7 +12,7 @@ struct Args {
 
 #[derive(Debug, Clone, ValueEnum)]
 enum Example {
-    Snowflake,
+    SnowflakeStatic,
     SnowflakeDynamic,
     Dummy,
 }
@@ -20,7 +20,7 @@ enum Example {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
     match args.example {
-        Example::Snowflake => snowflake::main(),
+        Example::SnowflakeStatic => snowflake_static::main(),
         Example::SnowflakeDynamic => snowflake_dynamic::main(),
         Example::Dummy => dummy::main(),
     }

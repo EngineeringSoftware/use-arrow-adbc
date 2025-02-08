@@ -41,14 +41,17 @@ function snowflake_dynamic() {
         cargo run -- --example $(echo $FUNCNAME | sed 's/_/-/g')
 }
 
-function snowflake() {
+function snowflake_static() {
         ### Runs ADBC example with the Snowflake driver.
 
         _check_precondition || return 1
 
         _export_snowflake_envs
-        cargo run -- --example $FUNCNAME
+        cargo run -- --example $(echo $FUNCNAME | sed 's/_/-/g')
 }
 
+[ $# -ne 1 ] && \
+        { echo "Required argument"; exit 1; }
+
 "$@" || \
-        { echo "Error"; }
+        { echo "Error"; exit 1; }
