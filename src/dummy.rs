@@ -8,8 +8,8 @@ const OPTION_BYTES_LONG: &[u8] = b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut driver = ManagedDriver::load_dynamic_from_name(
-        "adbc_dummy",
-        Some(b"DummyDriverInit"),
+        "adbc_snowflake",
+        Some(b"SnowflakeDriverInit"),
         AdbcVersion::V110,
     )
     .unwrap();

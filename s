@@ -12,19 +12,7 @@ function _extract() {
         cat $CONFIG | grep '^'"${fld}"' =' | head -n 1 | sed 's/'"${fld}"' = \(.*\)/\1/g'
 }
 
-function dummy() {
-        ### Runs ADBC example with a dummy driver.
-        export LD_LIBRARY_PATH=lib
-        cargo run -- --example $FUNCNAME
-}
-
-function snowflake() {
-        ### Runs ADBC example with the Snowflake driver.
-
-        # Check preconditions.
-        [ ! -f "$CONFIG" ] && \
-                { echo "config file not available"; return 1; }
-
+function _export_snowflake_envs() {
         export ADBC_SNOWFLAKE_SQL_DB="milos_test"
 
         export ADBC_SNOWFLAKE_SQL_ACCOUNT=$(_extract "accountname")
@@ -32,8 +20,35 @@ function snowflake() {
         export ADBC_SNOWFLAKE_PASSWORD=$(_extract "password")
         export ADBC_SNOWFLAKE_SQL_WAREHOUSE=$(_extract "warehousename")
         export ADBC_SNOWFLAKE_SQL_ROLE=$(_extract "rolename")
+}
 
+function _check_precondition() {
+        ### Check preconditions.
+
+        [ ! -f "$CONFIG" ] && \
+                { echo "config file not available"; return 1; }
+
+        return 0
+}
+
+function snowflake_dynamic() {
+        ### Runs ADBC example with a snowflake (.so) driver.
+        export LD_LIBRARY_PATH=lib
+
+        _check_precondition || return 1
+
+        _export_snowflake_envs
+        cargo run -- --example $(echo $FUNCNAME | sed 's/_/-/g')
+}
+
+function snowflake() {
+        ### Runs ADBC example with the Snowflake driver.
+
+        _check_precondition || return 1
+
+        _export_snowflake_envs
         cargo run -- --example $FUNCNAME
 }
 
-"$@"
+"$@" || \
+        { echo "Error"; }
