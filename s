@@ -32,6 +32,9 @@ function _snow_check_precond() {
         [ ! -f "$CONFIG" ] && \
                 { echo "config file not available"; return 1; }
 
+        hash go &> /dev/null ||
+                { echo "missing go for building .so"; return 1; }
+
         return 0
 }
 
