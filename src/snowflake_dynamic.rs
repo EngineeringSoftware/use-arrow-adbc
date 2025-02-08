@@ -2,12 +2,6 @@ use adbc_core::{Connection, Statement};
 use adbc_snowflake::{connection, database, Driver};
 use arrow_array::{cast::AsArray, types::Decimal128Type};
 
-//use adbc_core::driver_manager::ManagedDriver;
-//use adbc_core::options::{AdbcVersion, OptionDatabase, OptionStatement};
-//use adbc_core::Statement;
-//use adbc_core::{Connection, Database, Optionable};
-//use adbc_snowflake::{connection, database, Driver};
-
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut driver = Driver::try_load_dynamic()?;
 
