@@ -31,6 +31,13 @@ function _check_precondition() {
         return 0
 }
 
+function dummy() {
+        ### Runs ADBC example with the dummy driver.
+        export LD_LIBRARY_PATH=lib
+
+        cargo run -- --example $FUNCNAME
+}
+
 function snowflake_dynamic() {
         ### Runs ADBC example with a snowflake (.so) driver.
         export LD_LIBRARY_PATH=lib
