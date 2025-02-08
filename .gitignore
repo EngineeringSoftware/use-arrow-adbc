@@ -1,2 +1,4 @@
 /target
-lib/libadbc_driver_snowflake.so
+
+arrow-adbc/
+lib/libadbc_driver_snowflake.*
