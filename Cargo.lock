@@ -164,20 +164,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "arrow-select"
-version = "53.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7471ba126d0b0aaa24b50a36bc6c25e4e74869a1fd1a5553357027a0b1c8d1f1"
-dependencies = [
- "ahash",
- "arrow-array",
- "arrow-buffer",
- "arrow-data",
- "arrow-schema",
- "num",
-]
-
-[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -823,9 +809,6 @@ dependencies = [
  "adbc_dummy",
  "adbc_snowflake",
  "arrow-array",
- "arrow-buffer",
- "arrow-schema",
- "arrow-select",
  "clap",
 ]
 
