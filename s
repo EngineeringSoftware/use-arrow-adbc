@@ -15,7 +15,8 @@ function _snow_extract() {
 }
 
 function _snow_export_envs() {
-        export ADBC_SNOWFLAKE_SQL_DB="milos_test"
+        # The following is not required.
+        #export ADBC_SNOWFLAKE_SQL_DB="milos_test"
 
         export ADBC_SNOWFLAKE_SQL_ACCOUNT=$(_snow_extract "accountname")
         export ADBC_SNOWFLAKE_USERNAME=$(_snow_extract "username")
