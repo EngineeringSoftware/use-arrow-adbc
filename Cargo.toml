@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-adbc-core = { git = "https://github.com/apache/arrow-adbc.git", branch = "main", package = "adbc_core", version = "0.17.0", features = ["driver_manager"] }
-adbc-snowflake = { git = "https://github.com/apache/arrow-adbc.git", branch = "main", package = "adbc_snowflake", version = "0.17.0" }
-adbc-dummy = { git = "https://github.com/apache/arrow-adbc.git", branch = "main", package = "adbc_dummy", version = "0.17.0" }
+adbc-core = { git = "https://github.com/apache/arrow-adbc.git", package = "adbc_core", version = "0.17.0", features = ["driver_manager"], rev = "c6e529980f1369202adb101f2e1ea03c4e12dcdc" }
+adbc-snowflake = { git = "https://github.com/apache/arrow-adbc.git", package = "adbc_snowflake", version = "0.17.0", rev = "c6e529980f1369202adb101f2e1ea03c4e12dcdc" }
+adbc-dummy = { git = "https://github.com/apache/arrow-adbc.git", package = "adbc_dummy", version = "0.17.0", rev = "c6e529980f1369202adb101f2e1ea03c4e12dcdc" }
 
 arrow-array = { version = "53.4.0" }
 
