@@ -15,6 +15,22 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Construct a statement to execute a query
     let mut statement = connection.new_statement()?;
 
+    // note: exposes a bug
+    // "SELECT
+    // i3 = i1 AS i3_eq_i1,
+    // i3 != i1 AS i3_neq_i1,
+    // i3 <> i1 AS i3_ltgt_i1,
+    // i3 < i1 AS i3_lt_i1,
+    // i3 > i1 AS i3_gt_i1,
+    // i3 <= i1 AS i3_lte_i1,
+    // i3 >= i1 AS i3_gte_i1,
+    // i3 IS DISTINCT FROM i1 AS i3_distinct_i1,
+    // i1 + i3 AS i1_plus_i3,
+    // i1 - i3 AS i1_minus_i3,
+    // i1 * i3 AS i1_mul_i3,
+    // i1 % i3 AS i1_mod_i3,
+    // FROM (SELECT 3::integer AS i3, 1::integer AS i1)"
+
     // Execute a query
     statement.set_sql_query("SELECT 21 + 21")?;
     let mut reader = statement.execute()?;
