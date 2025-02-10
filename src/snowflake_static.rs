@@ -1,8 +1,11 @@
 use adbc_core::{Connection, Statement};
 use adbc_snowflake::{connection, database, Driver};
 use arrow_array::{cast::AsArray, types::Decimal128Type};
+use std::env;
 
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
+    env::set_var("ADBC_SNOWFLAKE_SQL_CLIENT_OPTION_TRACING", "fatal");
+
     // Load the driver
     let mut driver = Driver::try_load()?;
 
