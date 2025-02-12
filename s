@@ -74,7 +74,8 @@ function snowflake_dynamic() {
         _snow_build_so || return 1
         _snow_export_envs || return 1
 
-        cargo run -- --example $(echo $FUNCNAME | sed 's/_/-/g')
+        cargo build
+        ./target/debug/use-arrow-adbc --example $(echo $FUNCNAME | sed 's/_/-/g')
 }
 
 function snowflake_static() {
