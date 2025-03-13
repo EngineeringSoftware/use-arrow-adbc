@@ -53,6 +53,14 @@ function _snow_build_so() {
                 ) || \
                         { echo "Error: could not build .so"; return 1; }
 
+                ( cd arrow-adbc/go/adbc/pkg/bigquery
+                  go build \
+                     -tags driverlib \
+                     -buildmode=c-shared \
+                     -o "${DIR}/lib/libadbc_driver_bigquery.so" .
+                ) || \
+                        { echo "Error: could not build .so"; return 1; }
+
                 [ ! -f "lib/libadbc_driver_snowflake.so" ] && \
                         { echo "Error: no .so file"; return 1; }
         fi
