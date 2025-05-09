@@ -11,7 +11,7 @@ function _snow_extract() {
         ### Extract value from snowsql config file.
         local fld="${1}"
 
-        cat $CONFIG | grep '^'"${fld}"' =' | head -n 1 | sed 's/'"${fld}"' = \(.*\)/\1/g'
+        cat $CONFIG | grep '^#'"${fld}"' =' | head -n 1 | sed 's/#'"${fld}"' = \(.*\)/\1/g'
 }
 
 function _snow_export_envs() {
@@ -40,30 +40,31 @@ function _snow_check_precond() {
 }
 
 function _snow_build_so() {
-        if [ ! -f "lib/libadbc_driver_snowflake.so" ]; then
-                rm -rf arrow-adbc
-                git clone https://github.com/apache/arrow-adbc || \
-                        { echo "Error: could not clone"; return 1; }
+        #if [ ! -f "lib/libadbc_driver_snowflake.so" ]; then
+        #rm -rf arrow-adbc
+        #git clone https://github.com/apache/arrow-adbc || \
+                #{ echo "Error: could not clone"; return 1; }
 
-                ( cd arrow-adbc/go/adbc/pkg/snowflake
-                  go build \
-                     -tags driverlib \
-                     -buildmode=c-shared \
-                     -o "${DIR}/lib/libadbc_driver_snowflake.so" .
-                ) || \
-                        { echo "Error: could not build .so"; return 1; }
+        ( cd arrow-adbc/go/adbc/pkg/snowflake
+          go clean
+          go build \
+             -tags driverlib \
+             -buildmode=c-shared \
+             -o "${DIR}/lib/libadbc_driver_snowflake.so" .
+        ) || \
+                { echo "Error: could not build .so"; return 1; }
+        
+#        ( cd arrow-adbc/go/adbc/pkg/bigquery
+#                  go build \
+#                     -tags driverlib \
+#                     -buildmode=c-shared \
+#                     -o "${DIR}/lib/libadbc_driver_bigquery.so" .
+#                ) || \
+#                        { echo "Error: could not build .so"; return 1; }
 
-                ( cd arrow-adbc/go/adbc/pkg/bigquery
-                  go build \
-                     -tags driverlib \
-                     -buildmode=c-shared \
-                     -o "${DIR}/lib/libadbc_driver_bigquery.so" .
-                ) || \
-                        { echo "Error: could not build .so"; return 1; }
-
-                [ ! -f "lib/libadbc_driver_snowflake.so" ] && \
-                        { echo "Error: no .so file"; return 1; }
-        fi
+#                [ ! -f "lib/libadbc_driver_snowflake.so" ] && \
+#                        { echo "Error: no .so file"; return 1; }
+#        fi
         return 0
 }
 

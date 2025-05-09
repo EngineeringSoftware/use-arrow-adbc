@@ -10,4 +10,7 @@ adbc-dummy = { git = "https://github.com/apache/arrow-adbc.git", package = "adbc
 
 arrow-array = { version = "53.4.0" }
 
+tokio = { version = "1.45.0", features = ["full"] }
+
 clap = { version = "4", features = ["derive"] }
+libc = "0.2.172"
