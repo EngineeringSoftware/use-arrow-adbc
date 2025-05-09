@@ -5,7 +5,6 @@ use arrow_array::{cast::AsArray, types::Decimal128Type};
 use libc::{sigaltstack, stack_t, SS_DISABLE};
 use std::mem::MaybeUninit;
 
-use std::time::Duration;
 use tokio::task;
 
 // use std::error::Error;
@@ -63,14 +62,37 @@ fn stack() {
 // }
 
 pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    //     // Construct a database using environment variables
+    let mut driver = Driver::try_load_dynamic()?;
+    let database = database::Builder::from_env()?.build(&mut driver)?;
+
     // Spawn 5 tasks
-    let handles: Vec<_> = (0..5)
+    let handles: Vec<_> = (0..100)
         .map(|i| {
-            task::spawn(async move {
-                println!("Task {} started", i);
-                tokio::time::sleep(Duration::from_secs(1)).await;
-                println!("Task {} done", i);
-                i * 2 // return value
+            task::spawn({
+                let mut value = database.clone();
+                async move {
+                    println!("Task {} started", i);
+                    let mut connection = connection::Builder::from_env()
+                        .unwrap()
+                        .build(&mut value)
+                        .unwrap();
+                    let mut statement = connection.new_statement().unwrap();
+                    statement.set_sql_query("SELECT 21 + 21").unwrap();
+                    let mut reader = statement.execute().unwrap();
+                    //tokio::time::sleep(Duration::from_secs(1)).await;
+                    //println!("Task {} done", i);
+                    //i * 2 // return value
+
+                    let batch = reader.next().expect("a record batch").unwrap();
+                    assert_eq!(
+                        batch.column(0).as_primitive::<Decimal128Type>().value(0),
+                        42
+                    );
+
+                    stack();
+                    ()
+                }
             })
         })
         .collect();
@@ -78,7 +100,7 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Wait for all tasks to complete
     for handle in handles {
         match handle.await {
-            Ok(result) => println!("Got result: {}", result),
+            Ok(_result) => {} // println!("Got result: {:?}", result)},
             Err(e) => eprintln!("Task failed: {}", e),
         }
     }

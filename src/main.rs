@@ -1,6 +1,4 @@
-mod dummy;
 mod snowflake_dynamic;
-mod snowflake_static;
 
 use clap::{Parser, ValueEnum};
 use tokio;
@@ -13,9 +11,7 @@ struct Args {
 
 #[derive(Debug, Clone, ValueEnum)]
 enum Example {
-    SnowflakeStatic,
     SnowflakeDynamic,
-    Dummy,
 }
 
 #[tokio::main]
