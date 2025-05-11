@@ -40,19 +40,19 @@ function _snow_check_precond() {
 }
 
 function _snow_build_so() {
-        #if [ ! -f "lib/libadbc_driver_snowflake.so" ]; then
-        #rm -rf arrow-adbc
-        #git clone https://github.com/apache/arrow-adbc || \
-                #{ echo "Error: could not clone"; return 1; }
+        if [ ! -f "lib/libadbc_driver_snowflake.so" ]; then
+                rm -rf arrow-adbc
+                git clone https://github.com/apache/arrow-adbc || \
+                        { echo "Error: could not clone"; return 1; }
 
-        ( cd arrow-adbc/go/adbc/pkg/snowflake
-          go clean
-          go build \
-             -tags driverlib \
-             -buildmode=c-shared \
-             -o "${DIR}/lib/libadbc_driver_snowflake.so" .
-        ) || \
-                { echo "Error: could not build .so"; return 1; }
+                ( cd arrow-adbc/go/adbc/pkg/snowflake
+                  go clean
+                  go build \
+                     -tags driverlib \
+                     -buildmode=c-shared \
+                     -o "${DIR}/lib/libadbc_driver_snowflake.so" .
+                ) || \
+                        { echo "Error: could not build .so"; return 1; }
         
 #        ( cd arrow-adbc/go/adbc/pkg/bigquery
 #                  go build \
@@ -64,7 +64,7 @@ function _snow_build_so() {
 
 #                [ ! -f "lib/libadbc_driver_snowflake.so" ] && \
 #                        { echo "Error: no .so file"; return 1; }
-#        fi
+        fi
         return 0
 }
 
